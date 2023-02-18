@@ -13,6 +13,14 @@ type ServerConfig struct {
 	WriteTimeout time.Duration
 }
 
+type MysqlRead struct {
+	Config MysqlDatabaseConfig
+}
+
+type MysqlWrite struct {
+	Config MysqlDatabaseConfig
+}
+
 type MysqlDatabaseConfig struct {
 	DbType        string
 	DbUser        string
@@ -22,7 +30,6 @@ type MysqlDatabaseConfig struct {
 	DbDataName    string
 	DbTablePrefix string
 }
-
 type EmailConfig struct {
 	From         string
 	SmtpAddr     string
@@ -44,7 +51,8 @@ type LoggerConfig struct {
 }
 
 var ServerConf ServerConfig
-var MysqlDateBaseConfig MysqlDatabaseConfig
+var MysqlReadConf MysqlRead
+var MysqlWriteConf MysqlWrite
 var EmailConf EmailConfig
 var RedisConf RedisConfig
 var LoggerConf LoggerConfig
@@ -111,14 +119,22 @@ func isSetAndDefaultValue(key string, defaultValue any) {
 
 // 加载mysql配置
 func loadMysqlConfig() {
-
-	MysqlDateBaseConfig.DbDataName = viper.GetString("database.DATABASE_NAME")
-	MysqlDateBaseConfig.DbUser = viper.GetString("database.USER")
-	MysqlDateBaseConfig.DbHost = viper.GetString("database.HOST")
-	MysqlDateBaseConfig.DbPort = viper.GetString("database.PORT")
-	MysqlDateBaseConfig.DbTablePrefix = viper.GetString("database.TABLE_PREFIX")
-	MysqlDateBaseConfig.DbType = viper.GetString("database.TYPE")
-	MysqlDateBaseConfig.DbPassword = viper.GetString("database.PASSWORD")
+	// 写服务器
+	MysqlWriteConf.Config.DbDataName = viper.GetString("database.write.DATABASE_NAME")
+	MysqlWriteConf.Config.DbUser = viper.GetString("database.write.USER")
+	MysqlWriteConf.Config.DbHost = viper.GetString("database.write.HOST")
+	MysqlWriteConf.Config.DbPort = viper.GetString("database.write.PORT")
+	MysqlWriteConf.Config.DbTablePrefix = viper.GetString("database.write.TABLE_PREFIX")
+	MysqlWriteConf.Config.DbType = viper.GetString("database.write.TYPE")
+	MysqlWriteConf.Config.DbPassword = viper.GetString("database.write.PASSWORD")
+	// 读服务器
+	MysqlReadConf.Config.DbDataName = viper.GetString("database.read.DATABASE_NAME")
+	MysqlReadConf.Config.DbUser = viper.GetString("database.read.USER")
+	MysqlReadConf.Config.DbHost = viper.GetString("database.read.HOST")
+	MysqlReadConf.Config.DbPort = viper.GetString("database.read.PORT")
+	MysqlReadConf.Config.DbTablePrefix = viper.GetString("database.read.TABLE_PREFIX")
+	MysqlReadConf.Config.DbType = viper.GetString("database.read.TYPE")
+	MysqlReadConf.Config.DbPassword = viper.GetString("database.read.PASSWORD")
 }
 
 // 加载服务器配置

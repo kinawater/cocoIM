@@ -10,7 +10,16 @@ HTTP_PORT = 9527
 READ_TIMEOUT = 60
 WRITE_TIMEOUT = 60
 
-[database]
+[database.write]
+TYPE = "mysql"
+USER = "root"
+PASSWORD = "a8923331Sa"
+HOST = "127.0.0.1"
+PORT = "3306"
+DATABASE_NAME = "coco_im"
+TABLE_PREFIX = "coco"
+
+[database.read]
 TYPE = "mysql"
 USER = "root"
 PASSWORD = "a8923331Sa"
