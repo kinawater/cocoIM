@@ -1,0 +1,11 @@
+{
+  "name": "cocoIM sdk",
+  "version": "1.0.0",
+  "main": "sdk.ts",
+  "license": "MIT",
+  "dependencies": {
+    "@types/websocket": "^1.0.2",
+    "buffer": "^6.0.3",
+    "websocket": "^1.0.34"
+  }
+}
