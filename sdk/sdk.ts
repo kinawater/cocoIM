@@ -101,7 +101,7 @@ export class UserClient {
 
         if (status !== Ack.Success) {
             this.state = State.INIT
-            return status
+            return {status}
         }
 
         conn.onmessage = (msgEvent:IMessageEvent) => {
@@ -170,7 +170,7 @@ export class UserClient {
         console.debug("deadLine timeOut check Loop start")
         let loop = () => {
             if (this.state != State.CONNECTED) {
-                console.debug("now connect is not connected,heartbeatLoop exited")
+                console.debug("now connect is not connected,heartbeatLoop exited,state is " + this.state)
                 return
             }
             if ((Date.now() - this.lastRead) > readDeadLineTimeOutLimit) {
@@ -230,8 +230,8 @@ export class UserClient {
     // 退避算法
     async retryWithExponentialBackoff(
         fn: () => Promise<any>,
-        maxRetries?: number,
-        baseInterval?: number
+        maxRetries = 3,
+        baseInterval = 1000
     ): Promise<any> {
         let retryCount = 0;
 
