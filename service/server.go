@@ -27,6 +27,7 @@ type Server struct {
 	id      string //服务器ID
 	address string //服务器地址
 	users   handle.ConnectUserList
+	sync.Mutex
 }
 
 // 初始化
@@ -120,6 +121,16 @@ func (s *Server) Start() error {
 	})
 	logger.Info("started")
 	return http.ListenAndServe(s.address, mux)
+}
+func (s *Server) shutdown() {
+	s.once.Do(func() {
+		s.Lock()
+		defer s.Unlock()
+		s.users.Range(func(_, userConn any) bool {
+			userConn.(handle.ConnectUser).Connect.Close()
+			return true
+		})
+	})
 }
 
 // 普通文本处理

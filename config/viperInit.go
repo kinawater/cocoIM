@@ -8,6 +8,7 @@ import (
 )
 
 type ServerConfig struct {
+	ID           string
 	HTTPPort     int
 	ReadTimeout  time.Duration
 	WriteTimeout time.Duration
@@ -94,6 +95,7 @@ func init() {
 func setDefault() {
 	isSetAndDefaultValue("RUN_MODE", "debug")
 
+	isSetAndDefaultValue("server.ID", "demo")
 	isSetAndDefaultValue("server.HTTP_PORT", 8088)
 	isSetAndDefaultValue("server.READ_TIMEOUT", 60)
 	isSetAndDefaultValue("server.WRITE_TIMEOUT", 60)
@@ -139,6 +141,7 @@ func loadMysqlConfig() {
 
 // 加载服务器配置
 func loadServerConfig() {
+	ServerConf.ID = viper.GetString("server.ID")
 	ServerConf.HTTPPort = viper.GetInt("server.HTTP_PORT")
 	ServerConf.ReadTimeout = time.Duration(viper.GetInt("server.READ_TIMEOUT")) * time.Second
 	ServerConf.WriteTimeout = time.Duration(viper.GetInt("server.WRITE_TIMEOUT")) * time.Second

@@ -1,5 +1,5 @@
 import {w3cwebsocket,IMessageEvent,ICloseEvent} from 'websocket';
-import {Buffer} from 'buffer';
+import { Buffer } from 'buffer';
 
 export const PingCode : number = 100;
 export const PongCode : number = 101;
@@ -101,7 +101,7 @@ export class UserClient {
 
         if (status !== Ack.Success) {
             this.state = State.INIT
-            return {status}
+            return status
         }
 
         conn.onmessage = (msgEvent:IMessageEvent) => {
@@ -119,20 +119,20 @@ export class UserClient {
         }
         conn.onerror = (error) => {
             console.info("websocket link error :",error)
-            // TODO 重连 错误处理 errorHandle
+            this.errorHandler(error)
         }
         conn.onclose = (msgEvent:ICloseEvent) => {
             console.debug("connect [onclose] is fired")
             if (this.state == State.CLOSEING) {
-                // TODO onclose
+                this.onclose("logout")
                 return
             }
-            //TODO 重连 错误处理 errorHandle
+            this.errorHandler(new Error(msgEvent.reason))
         }
         this.userConn = conn
         this.state = State.CONNECTED
         this.heartbeatLoop()
-        // TODO 读取超时 readDeadLineLoop
+        this.readDeadLineLoop()
 
         return {status}
     }
@@ -158,7 +158,7 @@ export class UserClient {
                 console.debug("now connect is not connected,heartbeatLoop exited")
                 return
             }
-            // TODO send
+             this.send(Ping)
              console.log("send ping")
              setTimeout(loop,heartbeatLoopCheckGapTime)
          }
@@ -174,11 +174,83 @@ export class UserClient {
                 return
             }
             if ((Date.now() - this.lastRead) > readDeadLineTimeOutLimit) {
-                //TODO 重连 错误处理 errorHandle
+                this.errorHandler(new Error("read timeout"))
             }
             setTimeout(loop,raadDeadLineLoopCheckGapTime)
         }
         setTimeout(loop,raadDeadLineLoopCheckGapTime)
     }
     // 连接关闭
+    private onclose(reason:string) {
+        console.info("connect closed ,the reason is " + reason)
+        this.state = State.CLOSED
+    }
+    // 错误处理，自动重连
+    private async errorHandler(error:Error) {
+        if (this.state == State.CLOSED || this.state == State.CLOSEING) {
+            return
+        }
+        this.state = State.RECONNECTING
+        console.debug(error)
+        console.info("try to reconnection")
+
+        this.retryWithExponentialBackoff(this.reLogin,3,500).then(()=>{
+            console.error("reconnection success")
+        }).catch((err)=>{
+            console.error("too many retries" + err)
+            this.onclose("reconnect timeout and close connect")
+        })
+    }
+    private send(data : Buffer | Uint8Array):boolean {
+        try {
+            if (this.userConn == null) {
+                return false;
+            }
+            this.userConn.send(data);
+        } catch (error: unknown) {
+            // handle write error
+            this.errorHandler(new Error("read timeout"));
+            return false;
+        }
+        return true;
+    }
+    // 重连
+    private async reLogin():Promise<any> {
+        try{
+            console.info("Trying to log in again")
+            let {status} = await this.login()
+            if (status == Ack.Success) {
+                return
+            }
+        }catch (error) {
+            console.warn(error)
+            throw new Error('Failed to Login again');
+        }
+    }
+    // 退避算法
+    async retryWithExponentialBackoff(
+        fn: () => Promise<any>,
+        maxRetries?: number,
+        baseInterval?: number
+    ): Promise<any> {
+        let retryCount = 0;
+
+        while (retryCount <= maxRetries) {
+            try {
+                const result = await fn();
+                return result;
+            } catch (error) {
+                retryCount++;
+                if (retryCount > maxRetries) {
+                    throw new Error(`Max retries exceeded: ${retryCount}`);
+                }
+                const retryInterval = baseInterval * 2 ** retryCount;
+                console.log(`Retry ${retryCount} after ${retryInterval}ms`);
+                await new Promise((resolve) => setTimeout(resolve, retryInterval));
+            }
+        }
+        throw new Error(`Max retries exceeded: ${retryCount}`);
+    }
 }
+
+
