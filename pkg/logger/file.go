@@ -18,8 +18,10 @@ func openLogFile() *os.File {
 	fileName := fmt.Sprintf("%s%s.%s", config.LoggerConf.LogSaveName, time.Now().Format(LogFormatTime), config.LoggerConf.LogFileExt)
 	filePath := config.LoggerConf.LogPath + fileName
 	_, err := os.Stat(filePath)
-	switch {
-	case errors.Is(err, fs.ErrExist):
+
+	haveErr := true
+	switch haveErr {
+	case errors.Is(err, fs.ErrNotExist):
 		// 创建文件
 		mkLogDir()
 	case errors.Is(err, fs.ErrPermission):
@@ -34,6 +36,7 @@ func openLogFile() *os.File {
 }
 func mkLogDir() {
 	dir, _ := os.Getwd()
+	fmt.Println(dir)
 	err := os.MkdirAll(dir+"/"+config.LoggerConf.LogPath, os.ModePerm)
 	if err != nil {
 		log.Fatalf("日志文件创建失败:%v", err)
