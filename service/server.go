@@ -74,7 +74,7 @@ func (s *Server) Start() error {
 		if ok {
 			// 断开旧链接，同一时间只能运行一个地方登录
 			oldConnectUser.Connect.Close()
-			logger.Info(fmt.Printf("user: %s ,oldConnet address: %v", oldConnectUser.Connect.RemoteAddr()))
+			logger.Info(fmt.Printf("user: %s ,oldConnet address: %v", oldConnectUser.Connect.RemoteAddr(), "\n"))
 		}
 		// 独立协程处理
 		go func(user string, conn net.Conn) error {
@@ -101,7 +101,7 @@ func (s *Server) Start() error {
 					// 连接已经关闭
 					return errors.New(fmt.Sprintf("user:%s", user))
 				}
-				logger.Info(fmt.Printf("user:%s , %s , Header : %s", user, time.Now().Format(TimeFormatLayOut), readFrame.Header))
+				logger.Info(fmt.Printf("user:%s , %s , Header : %v", user, time.Now().Format(TimeFormatLayOut), readFrame.Header))
 				// 正常数据
 				// 是否采用的掩码
 				if readFrame.Header.Masked {
