@@ -1,4 +1,6 @@
-package cocoIM
+package main
+
+// 通信接口
 
 import (
 	"context"
@@ -51,7 +53,7 @@ type Conn interface {
 	Flush() error
 }
 
-//Frame websocket 一帧的封装
+// Frame websocket 一帧的封装
 type Frame interface {
 	SetOpCode(code OpCode)
 	GetOpCode() OpCode
@@ -79,25 +81,25 @@ type ChannleMap interface {
 	All()
 }
 
-//MessageListener 消息监听
+// MessageListener 消息监听
 type MessageListener interface {
 	//Receive 接收
 	Receive(Agent, []byte)
 }
 
-//Agent 发送方
+// Agent 发送方
 type Agent interface {
 	ID() string
 	Push([]byte) error
 }
 
-//Dialer 拨号器
+// Dialer 拨号器
 type Dialer interface {
 	// DialAndHandshake 握手
 	DialAndHandshake(DialerContext) (net.Conn, error)
 }
 
-//DialerContext 拨号连接上下文
+// DialerContext 拨号连接上下文
 type DialerContext struct {
 	Id      string
 	Name    string

@@ -1,4 +1,4 @@
-package cocoIM
+package main
 
 import (
 	"cocoIM/service"
