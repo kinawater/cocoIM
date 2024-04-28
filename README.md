@@ -1,5 +1,6 @@
 # cocoIM
-this coco IM system. 
+this coco IM system.
+This version will be built as plato
 
 #run
 
