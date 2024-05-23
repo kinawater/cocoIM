@@ -35,5 +35,4 @@ func cocoIM(cmd *cobra.Command, args []string) {
 
 // 初始化配置
 func initConfig() {
-
 }
