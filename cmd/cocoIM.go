@@ -30,7 +30,7 @@ func Execute() {
 }
 
 func cocoIM(cmd *cobra.Command, args []string) {
-
+	fmt.Println("服务器启动……当然是假的")
 }
 
 // 初始化配置

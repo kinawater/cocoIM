@@ -17,3 +17,22 @@ type Message struct {
 	Content    string
 	Session    string
 }
+
+// 创建对话
+func MakeNewChat(serverAddr, nick, userID, seessionID string) *Chat {
+	return &Chat{
+		Nick:      nick,
+		UserID:    userID,
+		SessionID: seessionID,
+		conn:      newConnet(serverAddr),
+	}
+}
+func (chat *Chat) Send(msg *Message) {
+	chat.conn.send(msg)
+}
+func (chat *Chat) Recv() <-chan *Message {
+	return chat.conn.recv()
+}
+func (chat *Chat) Close() {
+	chat.conn.close()
+}

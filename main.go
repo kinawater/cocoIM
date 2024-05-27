@@ -1,6 +1,8 @@
 package main
 
-import "cocoIM/cmd"
+import (
+	"cocoIM/cmd"
+)
 
 const version = "v0.0.2"
 
