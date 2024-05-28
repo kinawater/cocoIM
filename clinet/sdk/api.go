@@ -1,5 +1,9 @@
 package sdk
 
+const (
+	MsgTypeText = "text"
+)
+
 // 定义 聊天 结构体
 type Chat struct {
 	Nick      string
