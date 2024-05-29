@@ -1,7 +1,7 @@
 package cmd
 
 import (
-	"fmt"
+	"cocoIM/clinet"
 	"github.com/spf13/cobra"
 )
 
@@ -17,6 +17,5 @@ var clientCmd = &cobra.Command{
 }
 
 func ClientHandle(cmd *cobra.Command, args []string) {
-	// TODO client.Run
-	fmt.Println("client 还没写好")
+	clinet.RunMain()
 }
