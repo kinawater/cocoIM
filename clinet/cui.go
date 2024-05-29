@@ -222,7 +222,7 @@ func RunMain() {
 	// 测试下
 	fmt.Println("这是客户端")
 	// 创建chat
-	sdk.MakeNewChat("127.0.0.1:8080", "logic", "123456", "2131")
+	chat = sdk.MakeNewChat("127.0.0.1:8080", "logic", "123456", "2131")
 	// step2 创建GUI
 	g, err := gocui.NewGui(gocui.OutputNormal)
 	if err != nil {
