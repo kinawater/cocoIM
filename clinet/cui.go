@@ -172,6 +172,8 @@ func viewHead(g *gocui.Gui, x0, y0, x1, y1 int) error {
 }
 func layout(g *gocui.Gui) error {
 	maxX, maxY := g.Size()
+	//maxX = maxX - 100
+	//maxY = maxY - 100
 	if err := viewHead(g, 1, 1, maxX-1, 3); err != nil {
 		return err
 	}
