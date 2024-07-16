@@ -20,6 +20,7 @@ const (
 	DelNodeEvent EventType = "delNode"
 )
 
+// “事件”channel
 var eventChan chan *Event
 
 func EventChan() <-chan *Event { return eventChan }

@@ -4,15 +4,22 @@ import (
 	"cocoIM/common/config"
 	"cocoIM/common/discovery"
 	"context"
+	"fmt"
 	"github.com/bytedance/gopkg/util/logger"
 )
 
-// todo: init
-
 func Init() {
+	//构建一个事件通道
 	eventChan = make(chan *Event)
 	ctx := context.Background()
 	go DataHandler(&ctx)
+	fmt.Println(config.IsDebug())
+	if config.IsDebug() {
+		ctx := context.Background()
+		testServiceRegister(&ctx, "6668", "node-one")
+		testServiceRegister(&ctx, "6678", "node-two")
+		testServiceRegister(&ctx, "6688", "node-one")
+	}
 
 }
 

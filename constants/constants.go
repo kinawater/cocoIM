@@ -21,3 +21,6 @@ var Env = struct {
 	Pre:   EnvPre,
 	Prd:   EnvPrd,
 }
+
+// 服务发现的注册服务时候的租约超时时间
+var DiscoverRegisterLeaseTTL = 5
