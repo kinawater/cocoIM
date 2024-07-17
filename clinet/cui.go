@@ -1,7 +1,7 @@
 package clinet
 
 import (
-	"cocoIM/clinet/sdk"
+	"cocoIM/common/sdk"
 	"fmt"
 	"github.com/gookit/color"
 	"github.com/rocket049/gocui"
