@@ -7,10 +7,15 @@ type connection struct {
 	conn *net.TCPConn
 }
 
-func (c *connection) close() error {
+func (c *connection) Close() error {
 	err := c.conn.Close()
 	if err != nil {
 		return err
 	}
 	return nil
+}
+
+// 获取地址
+func (c *connection) RemoteAddr() string {
+	return c.conn.RemoteAddr().String()
 }

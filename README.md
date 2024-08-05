@@ -23,7 +23,7 @@ etcd3: etcd --name jiqun3 --listen-client-urls http://127.0.0.1:32379 --advertis
 ```
 启动完成后，本地启动ipconf
 ```shell
-plato ipconf --config=./plato.yaml
+coco ipconf --config=./plato.yaml
 ```
 可以通过curl访问
 ```shell
