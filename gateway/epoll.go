@@ -232,7 +232,7 @@ func (e *ePoll) addTask(c *connection) {
 	e.eChan <- c
 }
 
-// *************二级epoll相关操作
+// *************二级epoll相关操作***************************
 
 // 增加一个event到epoll的监听事件队列里
 func (ep *epollSingle) add(conn *connection) error {
@@ -257,6 +257,17 @@ func (ep *epollSingle) wait(timeout int) (conns []*connection, err error) {
 		}
 	}
 	return
+}
+
+func (ep *epollSingle) remove(c *connection) error {
+	subTcpNum()
+	fd := c.fd
+	err := unix.EpollCtl(ep.fd, syscall.EPOLL_CTL_DEL, fd, nil)
+	if err != nil {
+		return err
+	}
+	topEpoll.tables.Delete(fd)
+	return nil
 }
 
 // ******************** 系统相关设置 *********************
