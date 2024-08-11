@@ -28,3 +28,6 @@ func GetGatewayWaitQueueSize() int { return viper.GetInt("gateway.epoll_wait_que
 
 // GetGatewayServerPort gateway服务器通信端口
 func GetGatewayServerPort() int { return viper.GetInt("gateway.server_port") }
+
+// GetGatewayWorkerPoolNum 线程池配置
+func GetGatewayWorkerPoolNum() int { return viper.GetInt("gateway.worker_pool_num") }

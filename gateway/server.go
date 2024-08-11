@@ -4,6 +4,7 @@ import (
 	"cocoIM/common/config"
 	"cocoIM/common/tcp"
 	"errors"
+	"fmt"
 	"io"
 	"log"
 	"net"
@@ -16,9 +17,11 @@ func RunMain(path string) {
 		log.Fatalf("StartTCPPollServer err:%s", err.Error())
 		panic(err)
 	}
-	// TODO 一会删掉
-	_ = listener
-
+	initWorkPoll()
+	initEpoll(listener, runProc)
+	fmt.Println("---------------im gateway stated----------------")
+	// 这里阻塞掉
+	select {}
 }
 
 func runProc(c *connection, ep *epollSingle) {
@@ -31,8 +34,16 @@ func runProc(c *connection, ep *epollSingle) {
 		}
 		return
 	}
-	// TODO 一会删掉
-	_ = data
-
+	err = wPool.Submit(func() {
+		packetData := tcp.DataPacket{
+			Len:  uint32(len(data)),
+			Data: data,
+		}
+		marshalPacketData, _ := packetData.Marshal()
+		_ = tcp.WriteData(marshalPacketData, c.conn)
+	})
+	if err != nil {
+		fmt.Errorf("runProc:err:%v\n", err.Error())
+	}
 	return
 }

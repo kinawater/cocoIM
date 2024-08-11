@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"cocoIM/gateway"
 	"github.com/spf13/cobra"
 )
 
@@ -16,5 +17,5 @@ var gatewayCmd = &cobra.Command{
 }
 
 func GatewayHandle(cmd *cobra.Command, args []string) {
-	// TODO 尚未实现 RunMain
+	gateway.RunMain(ConfigPath)
 }

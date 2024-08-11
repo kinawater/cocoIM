@@ -1,5 +1,7 @@
 package sdk
 
+import "net"
+
 const (
 	MsgTypeText = "text"
 )
@@ -23,12 +25,12 @@ type Message struct {
 }
 
 // 创建对话
-func MakeNewChat(serverAddr, nick, userID, seessionID string) *Chat {
+func MakeNewChat(ip net.IP, port int, nick, userID, seessionID string) *Chat {
 	return &Chat{
 		Nick:      nick,
 		UserID:    userID,
 		SessionID: seessionID,
-		conn:      newConnet(serverAddr),
+		conn:      newConnet(ip, port),
 	}
 }
 func (chat *Chat) Send(msg *Message) {

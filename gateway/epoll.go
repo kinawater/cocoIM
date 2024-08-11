@@ -37,6 +37,8 @@ type epollSingle struct {
 
 // 当前服务器连接数(动态)
 var tcpNum int32
+
+// epoll 池
 var topEpoll *ePoll
 
 func initEpoll(listener *net.TCPListener, f func(c *connection, ep *epollSingle)) {
@@ -86,6 +88,7 @@ func (ep *ePoll) createTopReactorForAcceptProcess() {
 				if !checkBreakPoint() {
 					_ = acceptConn.Close()
 					// TODO:这里其实应该触发熔断后主动上报到监测，但是这个上报频率和上报接口尚未实现
+					// TODO:这里如果在多服务器集群的情况下，应该告知用户端当前服务器已经满了，需要去请求其他服务器，而不是反复测试当前服务器
 					// 即使实现也不影响当前的
 				}
 				// 给tcp连接增加配置
@@ -133,6 +136,7 @@ func (e *ePoll) creatSingleSecondEPollAndHandleEvent() {
 			case conn := <-e.eChan:
 				// 计数器加1，方便统计和判断是否超过最大值
 				addTcpNum()
+				fmt.Printf("tcpNum:%d\n", tcpNum)
 				if err = sEP.add(conn); err != nil {
 					fmt.Printf("增加连接到epoll失败（二级），err：%v \r\n", err)
 					err := conn.Close()
@@ -267,6 +271,7 @@ func (ep *epollSingle) remove(c *connection) error {
 		return err
 	}
 	topEpoll.tables.Delete(fd)
+	//fmt.Printf("one conn over,now tcpNum: %v \n", tcpNum)
 	return nil
 }
 

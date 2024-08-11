@@ -12,3 +12,4 @@ gateway:
   single_epoll_max_num: 8
   epoll_wait_queue_size: 100
   server_port: 8900
+  worker_pool_num: 1024
