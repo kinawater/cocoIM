@@ -1,0 +1,15 @@
+global:
+  env: debug
+discovery:
+  endpoints:
+    - localhost:12379
+  timeout: 5
+ip_conf:
+  service_path: /coco/ip_dispatcher
+gateway:
+  tcp_max_num: 1000000
+  epoll_channel_max_size: 100
+  single_epoll_max_num: 8
+  epoll_wait_queue_size: 100
+  server_port: 8900
+  worker_pool_num: 1024
