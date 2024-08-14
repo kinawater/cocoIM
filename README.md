@@ -30,3 +30,7 @@ coco ipconf --config=./plato.yaml
 curl --location --request GET '127.0.0.1:6789/ip/list'
 ```
 也可以浏览器直接访问上述地址 http://127.0.0.1:6789/ip/list
+
+
+【2024/8/14】
+目前测试的结果可得知，在笔记本上，放在docker容器里，单机能达到的连接数也就26万，离百万的距离还差的远，但是并不知道哪里出了问题
